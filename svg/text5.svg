@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 200 150">
+  <rect x="0" y="0" width="200" height="150" fill="#ddd" />  
+  <text x="5" y="20">
+    私は
+    <tspan dx="20" dy="10">SVG手描き士</tspan>
+    <tspan dx="-20" dy="-10">です。</tspan>    
+  </text>
+</svg>
