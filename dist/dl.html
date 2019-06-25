@@ -1,0 +1,53 @@
+    <!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="utf-8">        
+    </head>
+    <body>
+        <div>aaaa</div>
+        <table id="table" border="1"></table>
+        
+        <script>
+            // function onProgress(e) {
+            //     console.log('progress', e)
+            // }
+            // var oReq = new XMLHttpRequest();
+            // oReq.addEventListener('loadstart', () => console.log('loadstart'), false);
+            // oReq.addEventListener('progress', (e) => onProgress(e), false);
+            // oReq.addEventListener('load', () => console.log('load'), false);
+            // oReq.open('GET', 'http://localhost:5000/');
+            // oReq.send()
+
+            let table = document.getElementById('table');
+            console.log('prepare table')
+            headerOn = false
+
+            const worker = new Worker('reader.js');
+            worker.postMessage('start');
+
+            let currentRow = null
+            worker.addEventListener('message', (message) => {
+                let text = message.data
+                if (message.data === '\r') {
+                    console.log('改行！')
+                    currentRow = null
+                } else {
+                    if (currentRow === null) {
+                        currentRow = table.insertRow(-1)
+                    }
+
+                    if (!headerOn) {
+                        let th = document.createElement('th')                        
+                        console.log(text)
+                        th.innerText = text
+                        currentRow.appendChild(th)                                
+                        headerOn = true
+                    } else {
+                        let td = currentRow.insertCell(-1)
+                        td.innerText = text
+                    }                    
+                }                
+            });
+        </script>
+    </body>
+</html>

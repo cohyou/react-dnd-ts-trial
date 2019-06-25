@@ -1,0 +1,91 @@
+<html>
+<body>
+<svg id="svg" width="300" height="340" 
+  style="border-width: thick; border-color: #EEE; border-style: solid; display: block; margin: auto;">
+    <circle id="ball1" cx="100" cy="100" r="20" fill="blue" />
+    <circle id="ball2" cx="200" cy="200" r="20" fill="green" />
+</svg>
+<script>
+    'use strict'
+
+    class DraggableItem {
+        static create(svg_id, elem_id) {
+            const draggable = new DraggableItem(svg_id);
+            elem_id.forEach(function (id) {
+                draggable.addElem(id);
+            });
+        }
+
+        constructor(svg_id) {
+            this.dragElem = null;
+            this.offsetX = 0;
+            this.offsetY = 0;
+
+            this.svg = document.getElementById(svg_id);
+            this.svg.addEventListener("mousemove", e => this.mouseMove(e), false);
+            this.svg.addEventListener("touchmove", e => this.mouseMove(e), false);
+            this.svg.addEventListener("mouseup", e => this.mouseUp(e), false);
+            this.svg.addEventListener("touchend", e => this.mouseUp(e), false);
+        }
+
+        addElem(elem_id) {
+            const elem = document.getElementById(elem_id);
+            elem.addEventListener("mousedown", e => this.mouseDown(e), false);
+            elem.addEventListener("touchstart", e => this.mouseDown(e), false);
+            elem.addEventListener("mousemove", e => this.mouseMove(e), false);
+            elem.addEventListener("touchmove", e => this.mouseMove(e), false);
+            elem.addEventListener("mouseup", e => this.mouseUp(e), false);
+            elem.addEventListener("touchend", e => this.mouseUp(e), false);
+        }
+
+        screenPointToSVGPoint(svg, elem, x, y) {
+            const p = svg.createSVGPoint();
+            p.x = x;
+            p.y = y;
+            const CTM = elem.getScreenCTM();
+            return p.matrixTransform(CTM.inverse());
+        }
+
+        mousePointToSVGPoint(e) {
+            return this.screenPointToSVGPoint(
+                this.svg,
+                this.dragElem,
+                e.clientX,
+                e.clientY);
+        }
+
+        mouseDown(e) {
+
+            const event = (e.type === "mousedown") ? e : e.changedTouches[0];;
+            this.dragElem = event.target;
+
+            const p = this.mousePointToSVGPoint(event);
+            this.offsetX = p.x - this.dragElem.getAttribute("cx");
+            this.offsetY = p.y - this.dragElem.getAttribute("cy");
+
+            event.preventDefault();
+        }
+
+        mouseUp(e) {
+            this.dragElem = null;
+        }
+
+        mouseMove(e) {
+            if (!this.dragElem) { return; }
+
+            const event = (e.type === "mousemove") ? e : e.changedTouches[0];
+            const p = this.mousePointToSVGPoint(event);
+            this.dragElem.setAttribute("cx", p.x - this.offsetX);
+            this.dragElem.setAttribute("cy", p.y - this.offsetY);
+
+            event.preventDefault();
+        }
+    }
+
+    function init() {
+        DraggableItem.create('svg', ["ball1", "ball2"]);
+    }
+    init();
+</script>    
+</body>
+</html>
