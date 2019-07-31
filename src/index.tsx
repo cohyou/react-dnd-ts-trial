@@ -1,6 +1,11 @@
-import * as React from 'react'
-import * as ReactDOM from 'react-dom'
-import Kskp from './Kskp'
-import data from './data/data'
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { DragDropContextProvider } from 'react-dnd';
+import HTML5Backend from 'react-dnd-html5-backend';
+import Kskp from './Kskp';
 
-ReactDOM.render(<Kskp data={data} initialViews={[]} />, document.getElementById('kskp'))
+ReactDOM.render(
+    <DragDropContextProvider backend={HTML5Backend}>
+        <Kskp />
+    </DragDropContextProvider>,
+    document.getElementById('kskp'))    
