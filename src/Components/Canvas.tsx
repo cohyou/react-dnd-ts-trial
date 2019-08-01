@@ -11,7 +11,7 @@ interface Props {
 }
 
 export default function Canvas(props: Props) {
-    const [viewBox, setViewBox] = React.useState([0, 0, 500 * 0.75, 400]);
+    const [viewBox, setViewBox] = React.useState([0, 0, 1000 * 0.75, 800]);
     
     const [{ isOver, canDrop, offset, diff }, drop] = useDrop({
         accept: 'po',
@@ -19,7 +19,9 @@ export default function Canvas(props: Props) {
         drop: (item, monitor) => {
             const offset = monitor.getSourceClientOffset()
             if (offset != null) {
+                console.log(offset)
                 addNode(offset.x + viewBox[0], offset.y - 100 + viewBox[1])
+                // addNode(0, offset.y - 100 + viewBox[1])
             }            
         },
         collect: monitor => ({
@@ -74,11 +76,12 @@ export default function Canvas(props: Props) {
         startY = undefined
     }
 
-    return <svg xmlns="http://www.w3.org/2000/svg" version="1.1"
-        ref={drop} width="75%" height="400px" style={{backgroundColor: '#DDD'}}
+// width="75%"
+    return <div style={ {width: '500px', height: '400px', overflowX: 'scroll', overflowY: 'scroll' } }><svg xmlns="http://www.w3.org/2000/svg" version="1.1"
+        ref={drop} width="1000px" height="800px" style={{backgroundColor: '#DDD'}}
         viewBox={viewBoxString}
         onMouseDown={ (e) => onMounseDown(e) }
         >
         {rects}        
-    </svg>
+    </svg></div>    
 }

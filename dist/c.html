@@ -1,0 +1,50 @@
+<html>
+  <head>
+    <style>
+      #a {
+        background-color: red;
+        width: calc(600px * 1.618);
+        height: 600px;
+      }
+      #b {
+        display: inline-block;
+        background-color: blue;
+        width: 600px;
+        height: 600px;
+      }
+      #c {
+        display: inline-block;
+        background-color: yellow;
+        width: calc(100% - 600px);
+        height: 100%;
+      }
+      #d {
+        display: inline-block;
+        background-color: purple;
+        width: 100%;
+        height: 38.2%;
+      }
+      #e {
+        display: inline-block;
+        background-color: green;
+        width: 61.8%;
+        height: 100%;
+      }
+      #f {
+        display: inline-block;
+        background-color: orange;
+        width: 38.2%;
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="a">
+      <div id="b"></div><div id="c">
+        <div id="d">
+          <div id="e"></div><div id="f"></div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
