@@ -3,7 +3,8 @@ import FlowDesigner from './FlowDesigner'
 import ListView from './ListView'
 import Table from './Table'
 import Histogram from './Histogram';
-import TableWithHistogram from './TableWithHistogram';
+import TableWithHistogram from './TableWithHistogram'
+import StorageView from './StorageView'
 
 interface Props {
     nodes: any
@@ -23,6 +24,7 @@ export default function ViewSwitcher(props: Props) {
         case 3: v = <FlowDesigner nodes={nodes} />; break
         case 4: v = <Histogram />; break
         case 5: v = <TableWithHistogram />; break
+        case 6: v = <StorageView />; break
     }
 
     return <div className="Kskp" style={{
@@ -36,6 +38,7 @@ export default function ViewSwitcher(props: Props) {
             <button style={{display: 'inline-block', width: '50px', height: '50px', backgroundColor: 'brown'}} onClick={(e)=>setNum(3)}>3</button>
             <button style={{display: 'inline-block', width: '50px', height: '50px', backgroundColor: 'orange'}} onClick={(e)=>setNum(4)}>4</button>
             <button style={{display: 'inline-block', width: '50px', height: '50px', backgroundColor: 'skyblue'}} onClick={(e)=>setNum(5)}>5</button>
+            <button style={{display: 'inline-block', width: '50px', height: '50px', backgroundColor: 'red'}} onClick={(e)=>setNum(6)}>6</button>
         </div>
         {v}
     </div>
