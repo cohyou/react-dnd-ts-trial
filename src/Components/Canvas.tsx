@@ -13,24 +13,25 @@ interface Props {
 export default function Canvas(props: Props) {
     const canvasRef = React.useRef<HTMLDivElement>(null)
 
-    const [viewBox, setViewBox] = React.useState([0, 0, 1000 * 0.75, 800]);
-    const [boundingBox, setBoundingBox] = React.useState([0, 0, 0, 0]);
+    const [nodes, setNodes] = React.useState(props.nodes)    
+    const [viewBox, setViewBox] = React.useState([0, 0, 1000 * 0.75, 800])
+    const [boundingBox, setBoundingBox] = React.useState([0, 0, 0, 0])
 
     const [{ isOver, canDrop, offset, diff }, drop] = useDrop({
         accept: 'po',
         // canDrop: () => canMoveKnight(x, y),
         drop: (item, monitor) => {
             const offset = monitor.getSourceClientOffset()
-            console.log('getInitialClientOffset()', monitor.getInitialClientOffset())
-            console.log('getInitialSourceClientOffset()', monitor.getInitialSourceClientOffset())
-            console.log('getClientOffset()', monitor.getClientOffset())
-            console.log('getDifferenceFromInitialOffset()', monitor.getDifferenceFromInitialOffset())
-            console.log('getSourceClientOffset()', offset)
+            // console.log('getInitialClientOffset()', monitor.getInitialClientOffset())
+            // console.log('getInitialSourceClientOffset()', monitor.getInitialSourceClientOffset())
+            // console.log('getClientOffset()', monitor.getClientOffset())
+            // console.log('getDifferenceFromInitialOffset()', monitor.getDifferenceFromInitialOffset())
+            // console.log('getSourceClientOffset()', offset)
             if (offset != null) {
                 if (canvasRef && canvasRef.current) {
-                    console.log('offset.x', offset.x)
-                    console.log('viewBox[0]', viewBox[0])
-                    console.log('canvasRef.scrollLeft', canvasRef.current.scrollLeft)
+                    // console.log('offset.x', offset.x)
+                    // console.log('viewBox[0]', viewBox[0])
+                    // console.log('canvasRef.scrollLeft', canvasRef.current.scrollLeft)
                     addNode(offset.x - 330 + canvasRef.current.scrollLeft, offset.y - 105 + canvasRef.current.scrollTop)
                 }
                 // addNode(offset.x + viewBox[0] - 330, offset.y - 100 + viewBox[1])
@@ -46,13 +47,15 @@ export default function Canvas(props: Props) {
     })
 
     let rects = []
-    let nodes = props.nodes
+    // let nodes = props.nodes
     if (nodes.length > 0) {
         for (let i in nodes) {
-            // console.log('Canvas', nodes[i])
+            // console.log('node', i, nodes[i])
             let nodeX = nodes[i].position.x  // -22
             let nodeY = nodes[i].position.y  // -22
-            rects.push(<Node key={i} x={nodeX} y={nodeY} selected={containedByBB([nodeX, nodeY], boundingBox)} />)
+            let nodeSelected = nodes[i].selected
+            // rects.push(<Node key={i} x={nodeX} y={nodeY} selected={containedByBB([nodeX, nodeY], boundingBox, canvasRef)} />)            
+            rects.push(<Node key={i} x={nodeX} y={nodeY} selected={nodeSelected} />)
         }
     }
 
@@ -83,16 +86,18 @@ export default function Canvas(props: Props) {
         diffY = endY - startY
         
         // 選択範囲
-        console.log('onMouseMove', diffX, diffY)
-        setBoundingBox((boundingBox) => {
+        // console.log('onMouseMove', diffX, diffY)
+
+        setBoundingBox((boundingBox: any) => {
             return [startX, startY, endX, endY]
         })
+        setNodes((nodes: any) => {return nodes})
 
         // startX = e.pageX
         // startY = e.pageY
     }
 
-    const onMouseUp = (e: any) => {
+    const onMouseUp = (e: any) => {              
         document.removeEventListener('mousemove', mouseMoveEvent)
         document.removeEventListener('mouseup', mouseUpEvent)
         startX = undefined
@@ -102,7 +107,7 @@ export default function Canvas(props: Props) {
     let bb = boundingBox
     let bb_comp: any
     if (!isEmpty(bb)) {
-        console.log('bb', bb[0], bb[1], bb[2]-bb[0], bb[3]-bb[1])
+        // console.log('bb', bb[0], bb[1], bb[2]-bb[0], bb[3]-bb[1])
         let scrollLeft: any
         let scrollTop: any
         if (canvasRef && canvasRef.current) {
@@ -135,6 +140,16 @@ function isEmpty(bb: any) {
     return bb[0] === 0 && bb[1] === 0 && bb[2] === 0 && bb[3] === 0
 }
 
-function containedByBB(nd: any, bb: any) {
-    return false
+function containedByBB(nd: any, bb: any, canvasRef: any) {
+    if (isEmpty(bb)) return false
+    console.log("x1", nd[0] + 44, Math.min(bb[0], bb[1]))
+    // console.log("x1", nd[0] + 44, bb[0] - 330 + canvasRef.current.scrollLeft)
+    // console.log("x2", bb[2] - 330 + canvasRef.current.scrollLeft, nd[0])
+    // console.log("y1", nd[1] + 44, bb[1] - 105 + canvasRef.current.scrollTop)
+    // console.log("y2", bb[3] - 105 + canvasRef.current.scrollTop, nd[1])
+    // let r = !(nd[0] + 44 < bb[0] || bb[2] < nd[0] || 
+    //     nd[1] + 44 < bb[1] || bb[3] < nd[1])
+    let r = !(nd[0] + 44 < Math.min(bb[0], bb[1]))
+    console.log(r)
+    return r
 }

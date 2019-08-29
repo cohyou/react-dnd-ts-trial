@@ -16,7 +16,7 @@ export function observe(o: any) {
 }
 
 export function addNode(toX: any, toY: any) {
-  nodes.push({position: {x: toX, y: toY}})
+  nodes.push({position: {x: toX, y: toY}, selected: false})
   // console.log('moveKnight', nodes)
   emitChange()
 }
