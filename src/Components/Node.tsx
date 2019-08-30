@@ -7,8 +7,7 @@ let mouseUpEvent: any
 
 interface Props {
     x: number,
-    y: number,
-    selected: boolean,
+    y: number,    
 }
 
 interface State {
@@ -31,8 +30,8 @@ export default class Node extends React.Component<Props, State> {
             x: props.x, 
             y: props.y, 
             kind: 0,
-            selected: props.selected,
-        }
+            selected: false,
+        }        
     }
 
     onMouseDown(e: any) {
@@ -65,6 +64,11 @@ export default class Node extends React.Component<Props, State> {
         document.removeEventListener('mousemove', mouseMoveEvent)
         document.removeEventListener('mouseup', mouseUpEvent)    
     }
+
+    // static getDerivedStateFromProps(nextProps: Props, prevState: State) {
+    //     console.log("getDerivedStateFromProps", nextProps.selected, prevState.selected)
+    //     return Object.assign({}, prevState, {selected: nextProps.selected || prevState.selected})
+    // }
 
     render() {
         let colors = ['black', 'red', 'blue']

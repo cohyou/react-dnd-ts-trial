@@ -13,7 +13,7 @@ interface Props {
 export default function Canvas(props: Props) {
     const canvasRef = React.useRef<HTMLDivElement>(null)
 
-    const [nodes, setNodes] = React.useState(props.nodes)    
+    const [nodes, setNodes] = React.useState(props.nodes)
     const [viewBox, setViewBox] = React.useState([0, 0, 1000 * 0.75, 800])
     const [boundingBox, setBoundingBox] = React.useState([0, 0, 0, 0])
 
@@ -54,8 +54,9 @@ export default function Canvas(props: Props) {
             let nodeX = nodes[i].position.x  // -22
             let nodeY = nodes[i].position.y  // -22
             let nodeSelected = nodes[i].selected
-            // rects.push(<Node key={i} x={nodeX} y={nodeY} selected={containedByBB([nodeX, nodeY], boundingBox, canvasRef)} />)            
-            rects.push(<Node key={i} x={nodeX} y={nodeY} selected={nodeSelected} />)
+            // rects.push(<Node key={i} x={nodeX} y={nodeY} selected={containedByBB([nodeX, nodeY], boundingBox, canvasRef)} />)
+            // rects.push(<Node key={i} x={nodeX} y={nodeY} selected={nodeSelected} />)
+            rects.push(<Node key={i} x={nodeX} y={nodeY} />)
         }
     }
 
@@ -71,8 +72,8 @@ export default function Canvas(props: Props) {
         // console.log('Canvas mousedown OK!')
         mouseMoveEvent = (e: MouseEvent) => onMouseMove(e)
         mouseUpEvent = (e: MouseEvent) => onMouseUp(e)
-        document.addEventListener('mousemove', mouseMoveEvent, false)
-        document.addEventListener('mouseup', mouseUpEvent, false)
+        // document.addEventListener('mousemove', mouseMoveEvent, false)
+        // document.addEventListener('mouseup', mouseUpEvent, false)
         startX = e.pageX
         startY = e.pageY
     }
@@ -84,7 +85,7 @@ export default function Canvas(props: Props) {
         endY = e.pageY
         diffX = endX - startX
         diffY = endY - startY
-        
+
         // 選択範囲
         // console.log('onMouseMove', diffX, diffY)
 
@@ -97,9 +98,9 @@ export default function Canvas(props: Props) {
         // startY = e.pageY
     }
 
-    const onMouseUp = (e: any) => {              
-        document.removeEventListener('mousemove', mouseMoveEvent)
-        document.removeEventListener('mouseup', mouseUpEvent)
+    const onMouseUp = (e: any) => {
+        // document.removeEventListener('mousemove', mouseMoveEvent)
+        // document.removeEventListener('mouseup', mouseUpEvent)
         startX = undefined
         startY = undefined
     }
@@ -116,9 +117,9 @@ export default function Canvas(props: Props) {
         }
         let x = bb[2] > bb[0] ? bb[0] : bb[2]
         let y = bb[3] > bb[1] ? bb[1] : bb[3]
-        
+
         bb_comp = <rect
-                    x={x - 330 + scrollLeft} y={y - 105 + scrollTop} 
+                    x={x - 330 + scrollLeft} y={y - 105 + scrollTop}
                     width={Math.abs(bb[2]-bb[0])} height={Math.abs(bb[3]-bb[1])}
                     stroke="gray" fill="#DDD" fillOpacity={0.75}
                     strokeDasharray={"5 2"}
@@ -130,7 +131,9 @@ export default function Canvas(props: Props) {
         <svg xmlns="http://www.w3.org/2000/svg" version="1.1"
              ref={drop} width="1000px" height="800px" style={{backgroundColor: '#DDD'}}
              viewBox={viewBoxString}
-             onMouseDown={ (e) => onMounseDown(e) }>        
+             onMouseDown={ (e) => onMounseDown(e) }
+             onMouseMove={ (e) => onMouseMove(e) }
+             onMouseUp={ (e) => onMouseUp(e) }>
         {rects}
         {bb_comp}
     </svg></div>
@@ -147,7 +150,7 @@ function containedByBB(nd: any, bb: any, canvasRef: any) {
     // console.log("x2", bb[2] - 330 + canvasRef.current.scrollLeft, nd[0])
     // console.log("y1", nd[1] + 44, bb[1] - 105 + canvasRef.current.scrollTop)
     // console.log("y2", bb[3] - 105 + canvasRef.current.scrollTop, nd[1])
-    // let r = !(nd[0] + 44 < bb[0] || bb[2] < nd[0] || 
+    // let r = !(nd[0] + 44 < bb[0] || bb[2] < nd[0] ||
     //     nd[1] + 44 < bb[1] || bb[3] < nd[1])
     let r = !(nd[0] + 44 < Math.min(bb[0], bb[1]))
     console.log(r)
